@@ -11,6 +11,7 @@ package Árboles;
  * @param <E>
  */
 public class ArbolAVL<E> extends ÁrbolBinario{
+    //buscar no está aquí porque no requiere de una modificación...
     
     @Override
     public void insertar(Object dato){
@@ -20,14 +21,14 @@ public class ArbolAVL<E> extends ÁrbolBinario{
     }
     
     @Override
-    public NodoDeArbol borrar(Object dato){
-        NodoDeArbol nodo = super.borrar(dato);        
+    public NodoDeArbol<E> borrar(Object dato){
+        NodoDeArbol<E> nodo = super.borrar(dato);        
         equilibrarArbol(raiz, null);//debe ser raíz porque si envías nodo provocarás un error, puesto que ese ya fue eliminado :v xD
         
         return nodo;
     }
     
-    public int hallarFactorDeEquilibrio(NodoDeArbol nodo){
+    public int hallarFactorDeEquilibrio(NodoDeArbol<E> nodo){
         if(nodo != null){
             return hallarAltura(nodo.darHijoDerecho())-hallarAltura(nodo.darHijoIzquierdo());
         }
@@ -36,7 +37,7 @@ public class ArbolAVL<E> extends ÁrbolBinario{
         return 0;        
     }
     
-    public void equilibrarArbol(NodoDeArbol nodo, NodoDeArbol padreDeNodo){//el null nunca se utilizará porque en la raíz al revisar el FE, nunca se encontrará un FE anormal, porque el desequilibrio se habrá arreglado (Si es que eixstiera xD) antes de llegar ahi xD
+    public void equilibrarArbol(NodoDeArbol<E> nodo, NodoDeArbol<E> padreDeNodo){//el null nunca se utilizará porque en la raíz al revisar el FE, nunca se encontrará un FE anormal, porque el desequilibrio se habrá arreglado (Si es que eixstiera xD) antes de llegar ahi xD
         if(nodo != null){
             equilibrarArbol(nodo.darHijoDerecho(), nodo);
             equilibrarArbol(nodo.darHijoIzquierdo(), nodo);
@@ -52,7 +53,7 @@ public class ArbolAVL<E> extends ÁrbolBinario{
         //o si el no colocarlo provocará que no se regrese bien al método previo (aunque sabes que cuando termina un método le devuelve el mando a aquel quein lo llaamó y por ese motivdo no debería dar problemas :V xD)
     }          
     
-    private void hallarTipoRotacion(int factorDeEquilibrio, NodoDeArbol nodo, NodoDeArbol nodoPadre){                
+    private void hallarTipoRotacion(int factorDeEquilibrio, NodoDeArbol<E> nodo, NodoDeArbol<E> nodoPadre){                
         if(factorDeEquilibrio == -2){
             if(hallarFactorDeEquilibrio(nodo.darHijoIzquierdo()) == -1){//se requiere simple a la derecha...
                 rotarSimplementeALaDerecha(nodo, nodoPadre);
@@ -68,33 +69,33 @@ public class ArbolAVL<E> extends ÁrbolBinario{
         }
     }//sale mejor que estar haciendo un método para dar true or false por cada tipo de rotación... pues si se tuviera que hacer la última, se tendrían que hacer más llamadas del métood para hallar FE, que en este xD
     
-    private void rotarSimplementeALaIzquierda(NodoDeArbol nodoDesequilibrado, NodoDeArbol padreDelDesequilibrado){
-        NodoDeArbol nodoAuxiliar = nodoDesequilibrado;//se hace una copia del que pasará a ser hijo xD
+    private void rotarSimplementeALaIzquierda(NodoDeArbol<E> nodoDesequilibrado, NodoDeArbol<E> padreDelDesequilibrado){
+        NodoDeArbol<E> nodoAuxiliar = nodoDesequilibrado;//se hace una copia del que pasará a ser hijo xD
         
         nodoDesequilibrado =  nodoDesequilibrado.darHijoDerecho();//se hace el cambio del hijo por el padre para reequilibrar
         nodoAuxiliar.reestablecerHijoDerecho(nodoDesequilibrado.darHijoIzquierdo());//aquí el nodo desequilibrado ya fue reemplazado por su hijo derecho, quien permitirá reequilibrar el árbol xD
         nodoDesequilibrado.reestablecerHijoIzquierdo(nodoAuxiliar);//se establece como hijo izquierdo al que era padre del que ahora ocupa su lugar        
         
         padreDelDesequilibrado.reestablecerHijoDerecho(nodoDesequilibrado);//se hace actualiza el hijo del que era padre del desequilibrado        
-    }
+    }//funcional (o eso pienso xD)  
     
-    private void rotarSimplementeALaDerecha(NodoDeArbol nodoDesequilibrado, NodoDeArbol padreDelDesequilibrado){
-        NodoDeArbol nodoAuxiliar = nodoDesequilibrado;//se hace una copia del que pasará a ser hijo xD
+    private void rotarSimplementeALaDerecha(NodoDeArbol<E> nodoDesequilibrado, NodoDeArbol<E> padreDelDesequilibrado){
+        NodoDeArbol<E> nodoAuxiliar = nodoDesequilibrado;//se hace una copia del que pasará a ser hijo xD
         
         nodoDesequilibrado =  nodoDesequilibrado.darHijoIzquierdo();//se hace el cambio del hijo por el padre para reequilibrar
         nodoAuxiliar.reestablecerHijoIzquierdo(nodoDesequilibrado.darHijoDerecho());//aquí el nodo desequilibrado ya fue reemplazado por su hijo derecho, quien permitirá reequilibrar el árbol xD
         nodoDesequilibrado.reestablecerHijoDerecho(nodoAuxiliar);//se establece como hijo izquierdo al que era padre del que ahora ocupa su lugar        
         
         padreDelDesequilibrado.reestablecerHijoIzquierdo(nodoDesequilibrado);//se hace actualiza el hijo del que era padre del desequilibrado
-    }   
+    }//funcional (o eso pienso xD)   
     
-    private void rotarDoblementeALaIzquierda(NodoDeArbol nodoDesequilibrado, NodoDeArbol padreDelDesequilibrado){
+    private void rotarDoblementeALaIzquierda(NodoDeArbol<E> nodoDesequilibrado, NodoDeArbol<E> padreDelDesequilibrado){
         rotarSimplementeALaIzquierda(nodoDesequilibrado.darHijoIzquierdo(), nodoDesequilibrado);
         rotarSimplementeALaDerecha(nodoDesequilibrado, padreDelDesequilibrado);
-    }
+    }//si no funciona es porque las simples no están bien
 
-    private void rotarDoblementeALaDerecha(NodoDeArbol nodoDesequilibrado, NodoDeArbol padreDelDesequilibrado){
+    private void rotarDoblementeALaDerecha(NodoDeArbol<E> nodoDesequilibrado, NodoDeArbol<E> padreDelDesequilibrado){
         rotarSimplementeALaDerecha(nodoDesequilibrado.darHijoDerecho(), nodoDesequilibrado);//pues se debe arreglar primero el hijo y luego al padre xD
         rotarSimplementeALaIzquierda(nodoDesequilibrado, padreDelDesequilibrado);
-    }       
+    }//si no funciona es porque las simples no están bien
 }

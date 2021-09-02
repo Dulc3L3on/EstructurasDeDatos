@@ -12,7 +12,7 @@ package Listas;
 public class ListaDoblementeEnlazada<E> {
     private NodoDoble<E> primerNodo;
     private NodoDoble<E> ultimoNodo;
-    private int tamanioLista;
+    static int tamanioLista;
     
     public ListaDoblementeEnlazada(){
         vaciarLista();
@@ -22,8 +22,7 @@ public class ListaDoblementeEnlazada<E> {
         if(tamanioLista == 0){
             primerNodo = ultimoNodo = new NodoDoble<>(null, contenido, null);
             return true;
-        }
-        
+        }        
         return false;
     }
     
@@ -39,8 +38,7 @@ public class ListaDoblementeEnlazada<E> {
                         
             ultimoNodo.establecerSiguiente(contenido);
             ultimoNodo = ultimoNodo.obtenerSiguiente();            
-        }
-        
+        }        
         tamanioLista++;
     }
     
@@ -56,8 +54,7 @@ public class ListaDoblementeEnlazada<E> {
             
             primerNodo.establecerAnterior(contenido);
             primerNodo = primerNodo.obtenerAnterior();
-        }
-        
+        }        
         tamanioLista++;
     }
     

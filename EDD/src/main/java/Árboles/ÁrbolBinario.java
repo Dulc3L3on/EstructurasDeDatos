@@ -126,12 +126,12 @@ public class ÁrbolBinario<E> {
         if(nodoEliminado == null){
             System.out.println("El dato \""+ dato +"\" no se encontraba almacenado en el árbol");
         }else{
-            System.out.println("El dato \""+ dato +"\" se ha eliminado");
+            System.out.println("El dato \""+ dato +"\" se ha eliminado correctamente");
         }//Solo para que sea más informativo xD
         return nodoEliminado;
     }
     
-    private NodoDeArbol eliminar(NodoDeArbol laRaiz, Object dato) {                
+    private NodoDeArbol eliminar(NodoDeArbol laRaiz, Object dato){//no es necesario estar reestableciendo los hijos que se recorrieron para hacer la eliminación para actualizar si sucedió una modificación, puesto que independientemente de que el método sea o no recursivo, a menos que la var haga referencia específicamente a un estado de un objeto en particular, pues de esa manera no le serían percibidos los cambios que dicho obj pudiera recibir en cualquier línea del método en cuestión o de uno llamado allí en el interior                
         if (laRaiz != null) {                    
             if (herramientas.esMayor(laRaiz.darElemento(), dato)) {
                 laRaiz.reestablecerHijoDerecho(eliminar(laRaiz.darHijoDerecho(),dato));

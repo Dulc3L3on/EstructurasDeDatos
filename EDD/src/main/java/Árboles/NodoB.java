@@ -13,7 +13,7 @@ import Listas.ListaDoblementeEnlazada;
  */
 public class NodoB<E>{
     private E elemento;    
-    private ListaDoblementeEnlazada<NodoB<E>> hijoIzquierdo;//con este cambio del tipo de hijos, es posible que se pueda emular la forma de trabajar de los árboles B, puesto que los hijos no son individuales, sino por montón (listado) :v
+    private ListaDoblementeEnlazada<NodoB<E>> hijoIzquierdo;//con los hijos como listado, es posible emular la forma de trabajar de los árboles B, puesto que los hijos no son individuales, sino por montón (listado) :v
     private ListaDoblementeEnlazada<NodoB<E>> hijoDerecho;
       
     public NodoB(E elElemento){
@@ -49,7 +49,7 @@ public class NodoB<E>{
     }*///Hasta donde sé, este método no será útil, por la naturaleza del árbol...
     
     public boolean poseeHijos(){
-        return (!hijoIzquierdo.estaVacia() && !hijoDerecho.estaVacia());
+        return (!hijoIzquierdo.estaVacia() && !hijoDerecho.estaVacia());//en realidad para el caso de los árboles B por la naturaleza de estos, los nodosB o tienen dos hijos o no tienen ninguno... xD
     }
     
     public ListaDoblementeEnlazada<NodoB<E>> darHijoIzquierdo(){

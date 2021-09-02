@@ -78,7 +78,7 @@ public class NodoDeArbol<E> {//pienso que en el caso de los nodos si podría exi
             return 0;
         }
         return 1;
-    }
+    }//literalmente para hijos, porque los nietos no se cuentan con esto xD
     
     
     //SOLUCIÓN AL RPOBLEMA DE LAS COMPARACIONES, debido a que el contenido de los nodos pueden variar

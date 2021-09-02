@@ -19,7 +19,7 @@ public class AccionesComplementariasArbolB<E>{
     private int M;
     private Kit herramientas = new Kit();
     private NodoDoble<NodoB<E>> nuevoNodoDobleDelPadre;//puesto que no se requiere hacer una revisión previa (si es !=null) para emplear esta var... xD
-   
+    private ListaDoblementeEnlazada<NodoB<E>> listaSustitucionRaiz;
     
     public AccionesComplementariasArbolB(ListaDoblementeEnlazada<NodoB<E>> laRaiz, int gradoArbol){
         raiz = laRaiz;//recuerda que al hacer esto lo que haces es hacer referencia al contenido del dato que te enviaron, por ello al cb en la clase de arbolB, aquí tb se actualizará...
@@ -107,7 +107,7 @@ public class AccionesComplementariasArbolB<E>{
     private void casoEliminacionInterno(NodoDoble<NodoB<E>> nodoAEliminar, NodoDoble<NodoB<E>> padreListaNodoSustitucion, ListaDoblementeEnlazada<NodoB<E>> listaDeNodoSustitucion, NodoDoble<NodoB<E>> nodoSustitucion){//en este se hace transferencia hijo a padre
         if(!nodoSustitucion.obtenerContenido().poseeHijos()){//se ejecuta la transferencia de hijo a padre
             nodoSustitucion.obtenerContenido().establecerHijoIzquierdo(nodoAEliminar.obtenerContenido().darHijoIzquierdo());
-            nodoSustitucion.obtenerContenido().establecerHijoIzquierdo(nodoAEliminar.obtenerContenido().darHijoDerecho());//puesto que este debe mantener todo lo que el eliminado poseía... por eso se llamó nodo de sustituión xD
+            nodoSustitucion.obtenerContenido().establecerHijoDerecho(nodoAEliminar.obtenerContenido().darHijoDerecho());//puesto que este debe mantener todo lo que el eliminado poseía... por eso se llamó nodo de sustituión xD
             
             nodoAEliminar.reestablecerContenido(nodoSustitucion.obtenerContenido());
             nodoSustitucion.eliminar();//se elimina el nodo que funcionó como sustituto
@@ -133,7 +133,12 @@ public class AccionesComplementariasArbolB<E>{
     
     //si padre es igual a null, es decir que la lista necesitada sea la raíz, y esta no posee hijos no debería exe ninguno de estos tipos de redsitribución, si tuviera hijos, creo que habría que fusionar los hijos que tiene.. creo xD
     public void redistribuir(NodoDoble<NodoB<E>> padreDelPosibleNecesitado, ListaDoblementeEnlazada<NodoB<E>> posibleListaNecesitada){
-        if(posibleListaNecesitada.darTamanio()<M/2 /*&& padreDelNecesitado!= null*/){//si es igual a null, es porque la lista es la raiz, pero podría ser que fuera null y tuviera hijos... fmmm ahí que habría que hacer...
+       //Este ==0 es para cuando el listado raíz desparezca, porque se necesitaba un fusión un nivel abajo, en ese caso lo que se debe hacer es hacer que la raíz sea igual al litado en el que se fusionó la raíz... [la "desaparición" de una lista no puede suceder sino nada más que en la raíz...]
+        if(posibleListaNecesitada.darTamanio()==0){//aquí necesitaría al listado anterior para reestablecer la raíz...
+            //Esperaría que se se haga el reemplazo :v, hata donde sé si sucederá xD, de esta forma se puede igualar a la lista en la que se fusionó el único elemento de la raíz xD
+            //Si después de hacer una eli del tipo que requiera la fusión del único ele de la raíz te da un error, es porque de alguna manera el listado raíz no cb su referncia al hacer la igualación de abajito xD
+            posibleListaNecesitada = listaSustitucionRaiz;//puesto que en este caso la posible listaNecesitada corresponde a la raíz... ya sabes por ser objeto se actualiza la ref tb en el método de la clase de ÁrbolB... xD
+        }else if(padreDelPosibleNecesitado!= null && posibleListaNecesitada.darTamanio()<M/2){//== null indica que el listado es el de la raíz, al llegar ahí NO SE DEBE aplicar ninguna de las formas de redistribución puesto que no hay superiores de dónde obtener datos para realizarla y por ello es el único listado que puede llegar a tener como mín 1, sin importar el valor de M, y si tiene o no hijos
             if(!transferir(padreDelPosibleNecesitado.obtenerContenido(), posibleListaNecesitada)){
                 fusionar(padreDelPosibleNecesitado, posibleListaNecesitada);
             }
@@ -154,13 +159,14 @@ public class AccionesComplementariasArbolB<E>{
     }//terminado y hasta donde sé funcional... xD
     
     private void transferirAHijoDerechoNecesitado(NodoDoble<NodoB<E>> nodoPrestadoDelHijo, NodoB<E> padreDelNecesitado, ListaDoblementeEnlazada<NodoB<E>> listaNecesitada){                      
+        ListaDoblementeEnlazada<NodoB<E>> nodoAuxiliar = nodoPrestadoDelHijo.obtenerContenido().darHijoDerecho();
         //se establecen los hijos del antiguo padre como los del nodo que dio el hijo izquierdo prestamista...
         nodoPrestadoDelHijo.obtenerContenido().reestablecerHijoIzquierdo(padreDelNecesitado.darHijoIzquierdo());
         nodoPrestadoDelHijo.obtenerContenido().reestablecerHijoDerecho(padreDelNecesitado.darHijoDerecho());
                
         //se restablece los hijos del padre [si no tienen hijos no habrá problema, es más hacen el favor de hacer de una vez null los hios del padre,es decir esto evita un paso, cuando los hijos del padre del listado necesitado no tienen hijos xD] además recuerad que estas listas nunca son null, entonces lo que estarías haciedno es reemplazar los hijos antiguos del padre, por una lista sin elementos... xD
         padreDelNecesitado.reestablecerHijoDerecho(listaNecesitada.darPrimerElemento().obtenerContenido().darHijoIzquierdo());
-        padreDelNecesitado.reestablecerHijoIzquierdo(nodoPrestadoDelHijo.obtenerContenido().darHijoDerecho());//con el hijo izq del nodo prestado por el hijo no hay problema puesto que el hermano de este (por la condi de que debe tener más del mín, siempre tendrá un hermano) tiene la ref a él xD
+        padreDelNecesitado.reestablecerHijoIzquierdo(nodoAuxiliar);//con el hijo izq del nodo prestado por el hijo no hay problema puesto que el hermano de este (por la condi de que debe tener más del mín, siempre tendrá un hermano) tiene la ref a él xD
              
         listaNecesitada.agregarAnterior(padreDelNecesitado);//se agergar el nodo donado dle padre al listado necesitado                
         padreDelNecesitado = nodoPrestadoDelHijo.obtenerContenido();//Se reestablece el lugar del padre necesitado por el nodo donado del hijo izquierdo
@@ -170,13 +176,14 @@ public class AccionesComplementariasArbolB<E>{
     }//terminado
     
     private void transferirAHijoIzquierdoNecesitado(NodoDoble<NodoB<E>> nodoPrestadoDelHijo, NodoB<E> padreDelNecesitado, ListaDoblementeEnlazada<NodoB<E>> listaNecesitada){
+        ListaDoblementeEnlazada<NodoB<E>> nodoAuxiliar = nodoPrestadoDelHijo.obtenerContenido().darHijoIzquierdo();
         //se establecen los hijos del antiguo padre como los del nodo que dio el hijo derecho prestamista...
         nodoPrestadoDelHijo.obtenerContenido().reestablecerHijoIzquierdo(padreDelNecesitado.darHijoIzquierdo());
         nodoPrestadoDelHijo.obtenerContenido().reestablecerHijoDerecho(padreDelNecesitado.darHijoDerecho());
                 
         //se restablece los hijos del padre
         padreDelNecesitado.reestablecerHijoIzquierdo(listaNecesitada.darUltimoElemento().obtenerContenido().darHijoDerecho());
-        padreDelNecesitado.reestablecerHijoDerecho(nodoPrestadoDelHijo.obtenerContenido().darHijoIzquierdo());
+        padreDelNecesitado.reestablecerHijoDerecho(nodoAuxiliar);
               
         listaNecesitada.agregarSiguiente(padreDelNecesitado);//se agergar el nodo donado dle padre al listado necesitado                
         padreDelNecesitado = nodoPrestadoDelHijo.obtenerContenido();//Se reestablece el lugar del padre necesitado por el nodo donado del hijo derecho
@@ -191,6 +198,8 @@ public class AccionesComplementariasArbolB<E>{
         if((listaHermanoIzquierdoAFusionar = fusionarConHijoDerecho(nodoPadreDelNecesitado, listaNecesitada)) != null){
             fusionarConHijoIzquierdo(nodoPadreDelNecesitado, listaNecesitada, listaHermanoIzquierdoAFusionar);
         }    
+        //Aquí ya tendría los dato actualizados... aunque por la naturaleza de los bjetso creo que sería indifernete donde colocarla xD, puesto que se actualizaría el contenido al que refiere sea que iguales antes o no, a mneos que emplearas el método para hacer una copia del contenido y no almacenar la referncia, pero al menos aquí estás almacenando la referncia... entocnes el dato cambiará sin importar en que posición se coloque... niña! eso es un fundamento, no ebes olvidarlo :v xD, por eso que que cuando un método cambia un objeto no es necesario devolverlo para actualiar el valor porque la var del método que invocó al otro actualiza su referncia :v xD
+        listaSustitucionRaiz = listaNecesitada;//coloco aquí esto pues solo después de una fusión, podría suceder que la raíz llegue a tener un tamaño 0... y como el dato que se colocaría en la lista de la raíz sería el único hijo que poseería de existir al menos un elemento en ella, entonces almaceno las listas necesitadas actualizadas para hacer el reemplazo si es que se requiriera... xD        
         
         //se restablecen los hijos del padre (como nodoB) 
         nuevoNodoDobleDelPadre.obtenerContenido().reestablecerHijoIzquierdo(nuevoNodoDobleDelPadre.obtenerAnterior().obtenerContenido().darHijoDerecho());

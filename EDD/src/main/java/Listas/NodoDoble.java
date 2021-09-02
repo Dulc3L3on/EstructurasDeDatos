@@ -73,6 +73,7 @@ public class NodoDoble<E> {
         if(nodoSiguiente != null){
             nodoSiguiente.reestablecerAnterior(nodoAnterior);
         }              
+        ListaDoblementeEnlazada.tamanioLista--;//aaah ._. ahora sí ya se reduce el tamaño, por el momento solo eso se me ocurre, para seguir preservando el método de este lado y no tener que estar acarreando la lista para realizar la eliminación...
         //no me deja hacer esta instancia = null, pero pensandolo bien quizá no sea necesario porque ya hice que se perdiera la referencia... hice que se quedara en el olvido...
     }
 

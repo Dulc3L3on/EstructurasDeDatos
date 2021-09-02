@@ -149,7 +149,7 @@ public class ArbolB<E> {//no heredará de binario porque cambia bastante, pero e
         }
         
         return nodoAEliminar;
-    }
+    }//las redistribuciones hechas directamente en este método es para arreglar posibles problemas creados en niveles más arriba, por una fusión o transferencia realizada...
 }
 
 //NOTA: Creo que sería mejor tener un método que tenga el if para ver si la raíz es null y que mande a llamar a cualquiera de los métodos fundamentales, si el árbol tiene contenido...
