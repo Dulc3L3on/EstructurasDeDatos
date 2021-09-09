@@ -22,18 +22,18 @@ public class NodoDeArbol<E> {//pienso que en el caso de los nodos si podría exi
         this(elElemento, null, null);//Es decir que cuando el padre sea null, el nodo que se está inspeccionando será la raíz...
     }
     
-    public NodoDeArbol(E elElemento, NodoDeArbol elIzquierdo, NodoDeArbol elDerecho){//coloco al padre para que así se puede hacer "regresiones" como en el caso de las listas enlazadas, pero no se si estas regresiones (a niveles de mayor jerarquí o más arriba, para el caso de los árboles) se logran con la recursividad, según lo que estba pensando, sí es aśi, cuadno estés en el proceso de la búsqueda inténtal        
+    public NodoDeArbol(E elElemento, NodoDeArbol<E> elIzquierdo, NodoDeArbol<E> elDerecho){//coloco al padre para que así se puede hacer "regresiones" como en el caso de las listas enlazadas, pero no se si estas regresiones (a niveles de mayor jerarquí o más arriba, para el caso de los árboles) se logran con la recursividad, según lo que estba pensando, sí es aśi, cuadno estés en el proceso de la búsqueda inténtal        
         elemento = elElemento;
         
         hijoIzquierdo = elIzquierdo;
         hijoDerecho = elDerecho;             
     }
     
-    public void establecerHijoDerecho(NodoDeArbol elHijoDerecho){
+    public void establecerHijoDerecho(NodoDeArbol<E> elHijoDerecho){
         hijoDerecho = elHijoDerecho;
     }
     
-    public void establecerHijoIzquierdo(NodoDeArbol elHijoIzquierdo){
+    public void establecerHijoIzquierdo(NodoDeArbol<E> elHijoIzquierdo){
         hijoIzquierdo = elHijoIzquierdo;
     }
     
@@ -46,28 +46,67 @@ public class NodoDeArbol<E> {//pienso que en el caso de los nodos si podría exi
     }*/
     
     /*Estos métodos para reestableces los cree por la eliminación, puesto que al eli un nodo que contenga hijos, el orden que poseía el árbol cb*/
-      
-    public void reestablecerHijoIzquierdo(NodoDeArbol nuevoHijoIzquierdo){
+
+    /**
+     * Para cuando quieras que solo al obj que se le app este método
+     * sufra cambios de CONTENIDO (pues si es de ref solo se actualizaría
+     * el objeto al que se le asignó l anueva dir...)y no todos los que
+     * hacen refernecia al obj ant...
+     * @param contenidoNuevoHijoIzquierdo
+     */      
+    public void reestablecerHijoIzquierdo(E contenidoNuevoHijoIzquierdo){//coloco como parámetro el contenido, para evitar problemas de actualización de datos, debido a las referencias manejadas con los objetos...
+        if(hijoIzquierdo!=null){
+            hijoIzquierdo.reestablecerContenido(contenidoNuevoHijoIzquierdo);
+        }else{
+            hijoIzquierdo = new NodoDeArbol<>(contenidoNuevoHijoIzquierdo, null, null);
+        }
+        
+    }
+
+    /**
+     * Para cuando quieras que solo al obj que se le app este método
+     * sufra cambios de CONTENIDO (pues si es de ref solo se actualizaría
+     * el objeto al que se le asignó l anueva dir...)y no todos los 
+     * que hacen refernecia al obj ant...
+     * @param contenidoNuevoHijoDerecho
+     */ 
+    public void reestablecerHijoDerecho(E contenidoNuevoHijoDerecho){
+        hijoDerecho.reestablecerContenido(contenidoNuevoHijoDerecho);
+    }    
+    
+    /**
+     * para cuando quieras que todos los obj que hacen ref al antiguo 
+     * nodo se actualicen con el cambio de CONTENIDO (pues si es de ref
+     * solo se actualizaría el objeto al que se le asignó l anueva dir...)
+     * @param nuevoHijoIzquierdo
+     */
+    public void reestablecerHijoIzquierdo(NodoDeArbol<E> nuevoHijoIzquierdo){//coloco como parámetro el contenido, para evitar problemas de actualización de datos, debido a las referencias manejadas con los objetos...
         hijoIzquierdo = nuevoHijoIzquierdo;
     }
 
-    public void reestablecerHijoDerecho(NodoDeArbol nuevoHijoDerecho){
+    /**
+     * para cuando quieras que todos los obj que hacen ref al antiguo 
+     * nodo se actualicen con el cambio de CONTENIDO (pues si es de ref
+     * solo se actualizaría el objeto al que se le asignó l anueva dir...)
+     * @param nuevoHijoDerecho
+     */
+    public void reestablecerHijoDerecho(NodoDeArbol<E> nuevoHijoDerecho){
         hijoDerecho = nuevoHijoDerecho;
-    }    
+    }   
     
-    public void reestablecerElemento(E elElemento){
+    public void reestablecerContenido(E elElemento){
         elemento = elElemento;
     }
        
-    public NodoDeArbol darHijoIzquierdo(){
+    public NodoDeArbol<E> darHijoIzquierdo(){
         return hijoIzquierdo;
     }
     
-    public NodoDeArbol darHijoDerecho(){
+    public NodoDeArbol<E> darHijoDerecho(){
         return hijoDerecho;
     }
     
-    public E darElemento(){
+    public E darContenido(){
         return elemento;
     }
     

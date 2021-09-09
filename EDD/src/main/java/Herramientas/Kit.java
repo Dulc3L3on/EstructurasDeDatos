@@ -22,7 +22,14 @@ public class Kit {
             double numeroBase = (Double) objetoBase;//creo que es con mayúscula, ya no me acuerdo :,v
             
             return (numeroAComparar > numeroBase);
-        }if(objetoBase instanceof  Character && objetoAComparar instanceof Character){
+        }
+        if(objetoBase instanceof Integer && objetoAComparar instanceof Integer){//puse double para inclu ahí de una vez decimales y enteros...
+            double numeroAComparar = (Integer) objetoAComparar;
+            double numeroBase = (Integer) objetoBase;//creo que es con mayúscula, ya no me acuerdo :,v
+            
+            return (numeroAComparar > numeroBase);
+        }
+        if(objetoBase instanceof  Character && objetoAComparar instanceof Character){
             char caracterAComparar = (char) objetoAComparar;
             char caracterBase = (char) objetoBase;
             

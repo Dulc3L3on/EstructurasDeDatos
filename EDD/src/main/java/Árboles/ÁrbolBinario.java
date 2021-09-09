@@ -15,20 +15,21 @@ import Herramientas.Kit;
 public class ÁrbolBinario<E> {
     private Kit herramientas = new Kit();    
     //no hice privado el atributo para que pueda ser heredado... no olvides, lo privado no se hereda... es razonable xD, porque solo le pertenece al que lo posee xD
-    NodoDeArbol<E> raiz = null;//lo que deberás hacer es colocar el nodo con sus respectivas funciones, NO CAMBIES EL NODO uq creaste, en la parte de eliminación coloca ya sea la condi der !=null o izq == null o cb los contenidos de ese else iff cuando el dato es gual por el del else de abajito y que ese quede con el contenido de ese else if xD
+    public NodoDeArbol<E> raiz = null;//lo que deberás hacer es colocar el nodo con sus respectivas funciones, NO CAMBIES EL NODO uq creaste, en la parte de eliminación coloca ya sea la condi der !=null o izq == null o cb los contenidos de ese else iff cuando el dato es gual por el del else de abajito y que ese quede con el contenido de ese else if xD
        
     public void insertar(Object dato) {
         NodoDeArbol nuevoNodo = new NodoDeArbol(dato);
         
         if (raiz == null) {
             raiz = nuevoNodo;
+            System.out.println("Se ha insertado el dato "+ dato +" como la RAÍZ");
         } else {
             NodoDeArbol nodoAuxiliar = raiz;
             NodoDeArbol nodoAnterior = null;
             
             while (nodoAuxiliar != null) {//se eexe al menos una vez, por el hecho que la raíz no es null... xD
                 nodoAnterior = nodoAuxiliar;
-                if (herramientas.esMayor(nodoAuxiliar.darElemento(), nuevoNodo.darElemento())){//aux = objeto Base; nuevoNodo  = objetoAComparar
+                if (herramientas.esMayor(nodoAuxiliar.darContenido(), nuevoNodo.darContenido())){//aux = objeto Base; nuevoNodo  = objetoAComparar
                     nodoAuxiliar = nodoAuxiliar.darHijoDerecho();
                 } else {
                     nodoAuxiliar = nodoAuxiliar.darHijoIzquierdo();
@@ -36,13 +37,13 @@ public class ÁrbolBinario<E> {
             }
             
             //puesto que solo en el while se sabía si era mayor o menor, se debe hacer de nuevo aquí afuerita, la revisión
-            if (herramientas.esMayor(nodoAnterior.darElemento(), nuevoNodo.darElemento())){///no hay problemas con un null pointer porque está el if para cuando la raiz es null... xD
+            if (herramientas.esMayor(nodoAnterior.darContenido(), nuevoNodo.darContenido())){///no hay problemas con un null pointer porque está el if para cuando la raiz es null... xD y solo en ese caso el elemento insertado no tendría un anterior...
                 nodoAnterior.establecerHijoDerecho(nuevoNodo);
             } else {
                 nodoAnterior.establecerHijoIzquierdo(nuevoNodo);
             }
-
-        }
+            System.out.println("Se ha insertado el dato "+ dato);
+        }        
     }
 
     public void inorden() {
@@ -52,7 +53,7 @@ public class ÁrbolBinario<E> {
     private void inorden(NodoDeArbol laRaiz) {
         if (laRaiz != null) {
             inorden(laRaiz.darHijoIzquierdo());
-            System.out.println(" " + laRaiz.darElemento());
+            System.out.println(" " + laRaiz.darContenido());
             inorden(laRaiz.darHijoDerecho());
         }
     }
@@ -65,7 +66,7 @@ public class ÁrbolBinario<E> {
         if (laRaiz != null) {
             postorden(laRaiz.darHijoIzquierdo());
             postorden(laRaiz.darHijoDerecho());
-            System.out.println(laRaiz.darElemento() + " ");
+            System.out.println(laRaiz.darContenido() + " ");
         }
     }
 
@@ -75,7 +76,7 @@ public class ÁrbolBinario<E> {
 
     private void preorden(NodoDeArbol laRaiz) {
         if (laRaiz != null) {
-            System.out.println(laRaiz.darElemento() + " ");
+            System.out.println(laRaiz.darContenido() + " ");
             preorden(laRaiz.darHijoIzquierdo());
             preorden(laRaiz.darHijoDerecho());
         }
@@ -111,10 +112,10 @@ public class ÁrbolBinario<E> {
     }
     
     private NodoDeArbol encontrar(NodoDeArbol laRaiz, Object dato) {//coloco object, puesto que cuando se emplee este método, éste rev¿cibirá como parám el tipo correspondiente... lo cual se hará realidad por medio de la interfaz... xD
-        if (laRaiz == null || herramientas.esIgual(laRaiz.darElemento(), dato)) {//aquí se empleará el equals sobreescrito...            
+        if (laRaiz == null || herramientas.esIgual(laRaiz.darContenido(), dato)) {//aquí se empleará el equals sobreescrito...            
             return raiz;
         }
-        if (herramientas.esMayor(laRaiz.darElemento(), dato)) {//para evitar crear otro método, para el caso de z, se usará la equivalencia de raiz < dato, que sería dato > raíz...
+        if (herramientas.esMayor(laRaiz.darContenido(), dato)) {//para evitar crear otro método, para el caso de z, se usará la equivalencia de raiz < dato, que sería dato > raíz...
             return encontrar(laRaiz.darHijoDerecho(), dato);
         }
         return encontrar(laRaiz.darHijoIzquierdo(), dato);
@@ -133,19 +134,19 @@ public class ÁrbolBinario<E> {
     
     private NodoDeArbol eliminar(NodoDeArbol laRaiz, Object dato){//no es necesario estar reestableciendo los hijos que se recorrieron para hacer la eliminación para actualizar si sucedió una modificación, puesto que independientemente de que el método sea o no recursivo, a menos que la var haga referencia específicamente a un estado de un objeto en particular, pues de esa manera no le serían percibidos los cambios que dicho obj pudiera recibir en cualquier línea del método en cuestión o de uno llamado allí en el interior                
         if (laRaiz != null) {                    
-            if (herramientas.esMayor(laRaiz.darElemento(), dato)) {
+            if (herramientas.esMayor(laRaiz.darContenido(), dato)) {
                 laRaiz.reestablecerHijoDerecho(eliminar(laRaiz.darHijoDerecho(),dato));
-            }else if(herramientas.esMayor(dato, laRaiz.darElemento())){//equivalente a: dato < raiz
+            }else if(herramientas.esMayor(dato, laRaiz.darContenido())){//equivalente a: dato < raiz
                 laRaiz.reestablecerHijoIzquierdo(eliminar(laRaiz.darHijoIzquierdo(),dato));
             }else{//Es decir que es igual, se ha encontrado el dato...
                 if (laRaiz.darHijoIzquierdo()==null && laRaiz.darHijoDerecho()==null) {
                     laRaiz = null;
                 }else if(laRaiz.darHijoDerecho() != null){
-                    laRaiz.reestablecerElemento(sucesor(laRaiz));
-                    laRaiz.reestablecerHijoDerecho(eliminar(laRaiz.darHijoDerecho(),laRaiz.darElemento()));
+                    laRaiz.reestablecerContenido(sucesor(laRaiz));
+                    laRaiz.reestablecerHijoDerecho(eliminar(laRaiz.darHijoDerecho(),laRaiz.darContenido()));
                 }else{
-                    laRaiz.reestablecerElemento(predecesor(laRaiz));
-                    laRaiz.reestablecerHijoIzquierdo(eliminar(laRaiz.darHijoIzquierdo(),laRaiz.darElemento()));
+                    laRaiz.reestablecerContenido(predecesor(laRaiz));
+                    laRaiz.reestablecerHijoIzquierdo(eliminar(laRaiz.darHijoIzquierdo(),laRaiz.darContenido()));
                 }                                    
             }                                    
         }
@@ -154,18 +155,18 @@ public class ÁrbolBinario<E> {
     
     private E sucesor(NodoDeArbol laRaiz){//QUé tendré que colocar, object o E? dependerá de dónde se empleará este valor... si es para reemplezar, entonces E, si es para comparar, entocnes object... creo xD
         laRaiz = laRaiz.darHijoDerecho();
-        while(laRaiz.darHijoIzquierdo() != null){
+        while(laRaiz.darHijoIzquierdo() != null){//se escoge el más izquierdo del hijo derecho del nodo a eli, pues de esa manera será el más grande de todos los elementos del hijo izq del nodo a eliminar (más grande de sus primeos) y el más pequeño de todos los elementos del subárbol (hijo) derecho en el que se encontraba
             laRaiz = laRaiz.darHijoIzquierdo();
         }
-        return (E) laRaiz.darElemento();
+        return (E) laRaiz.darContenido();
     }//***OJO*** coloco E, porque el nodo recibe E's y además pienso que si envío Object, depués tendré problemas para tratar al elemento contenido, como se debe...
     
     private E predecesor(NodoDeArbol laRaiz){
         laRaiz = laRaiz.darHijoIzquierdo();
-        while(laRaiz.darHijoDerecho() != null){
+        while(laRaiz.darHijoDerecho() != null){//se escoge el más derecho del hijo izquierdo, pues de esa manera será el más grande de todos los nodos que se encontraban con én en el subárbol izquierdo y el más pequeño de tosdos los que se encuentran en el hijo (subárbol) derecho del nodo a eliminar...
             laRaiz = laRaiz.darHijoDerecho();
         }
-        return (E) laRaiz.darElemento();
+        return (E) laRaiz.darContenido();
     }   
 }
 
