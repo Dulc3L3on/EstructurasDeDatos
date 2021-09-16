@@ -23,7 +23,7 @@ public class Main {
        solo estarás modificando el espacio (o contenido) en sí de esa var paramétrica, y por ello no resultará afectado el 
        obj original...
      */    
-    private static void probarActualizacionEnRecursividad(){
+    public static void probarActualizacionEnRecursividad(){
         ListaDoblementeEnlazada<String> listadoStrings = new ListaDoblementeEnlazada<>();
         
         listadoStrings.agregarSiguiente("A");
@@ -74,18 +74,19 @@ public class Main {
         avl.insertar(4);
         avl.insertar(3);
         avl.insertar(0);
-        //avl.insertar(0);//duplicado, no debería addse
+        avl.insertar(1);
+//        avl.insertar(0);//duplicado, no debería addse, funciona bien, sea que se acepten o no claves repetidas
         System.out.println("se ha terminado la inserción\n");
         
         avl.borrar(12);
         avl.borrar(13);
         avl.borrar(5);
-        //avl.borrar(5);//intento eli dato inexistente, todo debería quedar como antes de intentarlo
+        avl.borrar(5);//intento eli dato inexistente, todo debería quedar como antes de intentarlo
         avl.borrar(4);
         System.out.println("se ha terminado la eliminación\n");
         
         avl.buscar(3);
-        //avl.buscar(12);//buscar un dato eliminado
+        avl.buscar(12);//buscar un dato eliminado
         //avl.buscar(13);//buscar un dato eliminado y en este caso que además era la raíz
         //avl.buscar(18);//buscar un dato que nunca se add al árbol
         System.out.println("se ha terminado la búsqueda\n");

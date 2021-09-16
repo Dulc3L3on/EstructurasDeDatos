@@ -25,24 +25,29 @@ public class ÁrbolBinario<E> {
             System.out.println("Se ha insertado el dato "+ dato +" como la RAÍZ");
         } else {
             NodoDeArbol nodoAuxiliar = raiz;
-            NodoDeArbol nodoAnterior = null;
+            NodoDeArbol nodoAnterior = null;//no se puede reducri esta var por el hecho que si se revisa en la condición directamente a los hijos podría suceder el caso en el que la raíz es null y con ello provocar un nullPointer...
             
-            while (nodoAuxiliar != null) {//se eexe al menos una vez, por el hecho que la raíz no es null... xD
+            while (nodoAuxiliar != null) {//se exe al menos una vez, por el hecho que la raíz no es null... xD
                 nodoAnterior = nodoAuxiliar;
                 if (herramientas.esMayor(nodoAuxiliar.darContenido(), nuevoNodo.darContenido())){//aux = objeto Base; nuevoNodo  = objetoAComparar
                     nodoAuxiliar = nodoAuxiliar.darHijoDerecho();
-                } else {
+                } else{//<=
                     nodoAuxiliar = nodoAuxiliar.darHijoIzquierdo();
                 }
             }
             
             //puesto que solo en el while se sabía si era mayor o menor, se debe hacer de nuevo aquí afuerita, la revisión
-            if (herramientas.esMayor(nodoAnterior.darContenido(), nuevoNodo.darContenido())){///no hay problemas con un null pointer porque está el if para cuando la raiz es null... xD y solo en ese caso el elemento insertado no tendría un anterior...
-                nodoAnterior.establecerHijoDerecho(nuevoNodo);
-            } else {
-                nodoAnterior.establecerHijoIzquierdo(nuevoNodo);
-            }
-            System.out.println("Se ha insertado el dato "+ dato);
+            if(nodoAnterior != null){
+                if (herramientas.esMayor(nodoAnterior.darContenido(), nuevoNodo.darContenido())){///no hay problemas con un null pointer porque está el if para cuando la raiz es null... xD y solo en ese caso el elemento insertado no tendría un anterior...
+                    nodoAnterior.establecerHijoDerecho(nuevoNodo);
+                    System.out.println("Se ha insertado el dato "+ dato);
+                } else/* if(herramientas.esMayor(nuevoNodo.darContenido(), nodoAnterior.darContenido()))*/ {//Esto permite que exista la aceptación de datos repetidos... en todo caso lo que debería hacer es colocar un if para < y otro en el que sea = enviar un msje diciendo que nos e admiten... y no se establezca nada...
+                    nodoAnterior.establecerHijoIzquierdo(nuevoNodo);     
+                    System.out.println("Se ha insertado el dato "+ dato);
+                }/*else{
+                    System.out.println("Ya se encuentra almacendo un dato con código igual");
+                }*///lo comentado con /**/ es para cuando NO se deba permitir insertar datos con clave repetida...                             
+            }           
         }        
     }
 
@@ -102,23 +107,24 @@ public class ÁrbolBinario<E> {
         if (nodo == null) {
             System.out.println("El dato \"" + dato + "\" NO se encuentra almacenado");//ya sea porquue no hanía nada en el árbol, o de verdad no estaba xD
         } else {
-            System.out.println("El datos \"" + dato + "\" SI se encuentra almacenado");
+            System.out.println("El dato \"" + nodo.darContenido() + "\" SI se encuentra almacenado");
         }
-        return nodo;
+        return nodo;//NO se muestra un msje coherente, pero si funciona como debe UwU, lo digo porque ya lo corroboré con el debbuger xD [lo que sucede es que al llegar a la primer llamada, la var laRaiz tiene como valor literalmente la raíz... entonces eso es lo que termina reciviendo el método que muestra el msje :v
+                    //lo que tendŕia que hacerse el almacenar el dato al llegar a la última llamada[Es decir en la cual se halló] y en lugar de mostrar el dato que devuleve el método que realiza la axn mostrar un msje a base del contenido de esa var xD... pero la cuestión sería establecerla en el punto correcto, porque sino terminaría obteniendo otroo valor, esto es más que todo cuando el dato no está xD
     }
     
     private NodoDeArbol encontrar(Object dato) {
         return encontrar(raiz, dato);
     }
     
-    private NodoDeArbol encontrar(NodoDeArbol laRaiz, Object dato) {//coloco object, puesto que cuando se emplee este método, éste rev¿cibirá como parám el tipo correspondiente... lo cual se hará realidad por medio de la interfaz... xD
-        if (laRaiz == null || herramientas.esIgual(laRaiz.darContenido(), dato)) {//aquí se empleará el equals sobreescrito...            
+    private NodoDeArbol encontrar(NodoDeArbol nodoActual, Object dato) {//coloco object, puesto que cuando se emplee este método, éste rev¿cibirá como parám el tipo correspondiente... lo cual se hará realidad por medio de la interfaz... xD
+        if (nodoActual == null || herramientas.esIgual(nodoActual.darContenido(), dato)) {//aquí se empleará el equals sobreescrito...            
             return raiz;
         }
-        if (herramientas.esMayor(laRaiz.darContenido(), dato)) {//para evitar crear otro método, para el caso de z, se usará la equivalencia de raiz < dato, que sería dato > raíz...
-            return encontrar(laRaiz.darHijoDerecho(), dato);
+        if (herramientas.esMayor(nodoActual.darContenido(), dato)) {//para evitar crear otro método, para el caso de z, se usará la equivalencia de raiz < dato, que sería dato > raíz...
+            return encontrar(nodoActual.darHijoDerecho(), dato);
         }
-        return encontrar(laRaiz.darHijoIzquierdo(), dato);
+        return encontrar(nodoActual.darHijoIzquierdo(), dato);
     }    
     
     public NodoDeArbol borrar(Object dato){
@@ -127,9 +133,9 @@ public class ÁrbolBinario<E> {
         if(nodoEliminado == null){
             System.out.println("El dato \""+ dato +"\" no se encontraba almacenado en el árbol");
         }else{
-            System.out.println("El dato \""+ dato +"\" se ha eliminado correctamente");
+            System.out.println("El dato \""+ nodoEliminado.darContenido() +"\" se ha eliminado correctamente");
         }//Solo para que sea más informativo xD
-        return nodoEliminado;
+        return nodoEliminado;//NO se muestra un msje coherente, pero si funciona como debe UwU, lo digo porque ya lo corroboré con el debbuger xD [lo que sucede es que al llegar a la primer llamada, la var laRaiz tiene como valor literalmente la raíz... entonces eso es lo que termina reciviendo el método que muestra el msje :v
     }
     
     private NodoDeArbol eliminar(NodoDeArbol laRaiz, Object dato){//no es necesario estar reestableciendo los hijos que se recorrieron para hacer la eliminación para actualizar si sucedió una modificación, puesto que independientemente de que el método sea o no recursivo, a menos que la var haga referencia específicamente a un estado de un objeto en particular, pues de esa manera no le serían percibidos los cambios que dicho obj pudiera recibir en cualquier línea del método en cuestión o de uno llamado allí en el interior                
